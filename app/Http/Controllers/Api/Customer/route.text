@@ -1,0 +1,14 @@
+// ------ Customer -----------
+Route::post('register-customer', [RegisterCustomerApiController::class, 'register']);
+Route::post('login-customer', [LoginCustomerApiController::class, 'login']);
+
+
+
+// ------ Gapoktan -----------
+// Education
+Route::resource('education', EducationApiController::class);
+Route::resource('education-category', EducationCategoryApiController::class);
+// Activity
+Route::resource('activity', ActivityApiController::class);
+Route::get('activity/search/{name}', [ActivityApiController::class, 'search']);
+Route::resource('activity-category', ActivityCategoryApiController::class);

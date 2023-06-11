@@ -381,20 +381,21 @@
             return list
         }
 
-        const sendMessageTemplate = (msg) => {
+        const sendMessageTemplate = (msg, message = '') => {
             return `<div class="chat-message-right text-white pb-4">
                 <div class="me-3">
                             <div class="text-muted small text-nowrap mt-2">
-                              ${moment(msg.created_at).format('hh:mm')}
+                              ${moment(msg.created_at ?? new Date()).format('hh:mm')}
                             </div>
                         </div>
                         <div
-                            class="text-capitalize flex-shrink-1 bg-primary rounded py-2 px-3 me-3">
+                            class="flex-shrink-1 bg-primary rounded py-2 px-3 me-3">
                             <div class="font-weight-bold mb-1">Anda</div>
-                                ${messageBox.val()}
+                                ${(messageBox.val() == '') ? message : messageBox.val() }
                         </div>
                         </div>`
         }
+
 
         const readMessage = (chat_id, receiver_id) => {
             $.ajax({
@@ -414,7 +415,7 @@
             })
         }
 
-        const sendMessage = (msg) => {
+        const sendMessage = (msg, status = true) => {
             $.ajax({
                 url: `${baseUrl}/send-messages`,
                 method: 'post',
@@ -424,10 +425,12 @@
                     'X-CSRF-TOKEN': $('meta[name=csrf_token]').prop('content')
                 },
                 success: function(res) {
-                    chatMessages.append(sendMessageTemplate(res));
-                    messageBox.val(null)
+                    if (status) {
+                        chatMessages.append(sendMessageTemplate(res));
+                        messageBox.val(null)
 
-                    scrollMsg()
+                        scrollMsg()
+                    }
                 }
             })
         }
@@ -498,6 +501,40 @@
                 sendMessage(msg)
 
             })
+
+            let chatProduct = sessionStorage.getItem('chat')
+
+            if (chatProduct) {
+                let cp = JSON.parse(chatProduct);
+                let img = '/img/no-image.png'
+                if (cp.product.photo_product.length) {
+                    img = `/../storage/produk/${cp.product.photo_product[0].name}`
+                }
+
+
+                let msgproduct =
+                    `<img src="${img}" width="80" height="80" ><br> <a href="${cp.url}" target="blank">${cp.url}</a> <br> produk ini apakah masih ada?`;
+                containerChat.removeClass('d-none')
+                sendChat.removeClass('d-none')
+                username.text(cp.product.name)
+
+                let msg = {
+                    receiver_id: cp.product.user_id,
+                    message: msgproduct,
+                    product_id: cp.product.id
+                }
+
+                chatMessages.append(sendMessageTemplate(msg, msgproduct));
+
+                sendMessage(msg, false)
+                scrollMsg()
+                receiver.val(cp.product.user_id)
+                getAllMessages()
+
+                sessionStorage.clear()
+
+
+            }
         })
     </script>
 @endsection

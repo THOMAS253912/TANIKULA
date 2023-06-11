@@ -340,7 +340,7 @@ class ProductController extends Controller
             $product = Product::with('photo_product')
                 ->join('product_categories', 'products.category_product_id', '=', 'product_categories.id')
                 ->join('users', 'products.user_id', '=', 'users.id')
-                ->select('products.*', 'product_categories.name as category_name')
+                ->select(['products.*', 'product_categories.name as category_name','users.name'])
                 ->where('products.slug', $slug)
                 ->orderBy('products.updated_at', 'desc')
                 ->first();
@@ -364,10 +364,8 @@ class ProductController extends Controller
                 $ratingValue = 0;
             }
 
-            $chat = UserChat::where('user_id', $product->user_id)->first(['id_user_chat']);
-
             // $photoProduct = PhotoProduct::where('product_id', $product->id)->get();
-            return view('pages.home.detail', compact('product', 'product_new', 'reviews', 'ratingValue', 'showReviews', 'chat'));
+            return view('pages.home.detail', compact('product', 'product_new', 'reviews', 'ratingValue', 'showReviews'));
         } else {
             notify()->warning("Produk tidak ditemukan!", "Peringatan", "topRight");
             return redirect('/');

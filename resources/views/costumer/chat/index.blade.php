@@ -341,8 +341,10 @@
                             if (!v.is_read) chat.push(v.chat_id)
                         })
 
-                        if (chat.length > 0) readMessage(chat, newMessages[0].user_id)
-                        scrollMsg()
+                        if (chat.length > 0) {
+                            readMessage(chat, newMessages[0].user_id)
+                            scrollMsg()
+                        }
                     }
                 }
             })
@@ -507,31 +509,33 @@
             if (chatProduct) {
                 let cp = JSON.parse(chatProduct);
                 let img = '/img/no-image.png'
-                if (cp.product.photo_product.length) {
-                    img = `/../storage/produk/${cp.product.photo_product[0].name}`
+                if (cp.product.user_id != userId) {
+                    if (cp.product.photo_product.length) {
+                        img = `/../storage/produk/${cp.product.photo_product[0].name}`
+                    }
+
+                    let msgproduct =
+                        `<img src="${img}" width="80" height="80" ><br> <a href="${cp.url}" target="blank">${cp.url}</a> <br> produk ini apakah masih ada?`;
+                    containerChat.removeClass('d-none')
+                    sendChat.removeClass('d-none')
+                    username.text(cp.product.name)
+
+                    let msg = {
+                        receiver_id: cp.product.user_id,
+                        message: msgproduct,
+                        product_id: cp.product.id
+                    }
+
+                    chatMessages.append(sendMessageTemplate(msg, msgproduct));
+
+                    sendMessage(msg, false)
+                    scrollMsg()
+                    receiver.val(cp.product.user_id)
+                    getAllMessages()
+
+                    sessionStorage.clear()
                 }
 
-
-                let msgproduct =
-                    `<img src="${img}" width="80" height="80" ><br> <a href="${cp.url}" target="blank">${cp.url}</a> <br> produk ini apakah masih ada?`;
-                containerChat.removeClass('d-none')
-                sendChat.removeClass('d-none')
-                username.text(cp.product.name)
-
-                let msg = {
-                    receiver_id: cp.product.user_id,
-                    message: msgproduct,
-                    product_id: cp.product.id
-                }
-
-                chatMessages.append(sendMessageTemplate(msg, msgproduct));
-
-                sendMessage(msg, false)
-                scrollMsg()
-                receiver.val(cp.product.user_id)
-                getAllMessages()
-
-                sessionStorage.clear()
 
 
             }

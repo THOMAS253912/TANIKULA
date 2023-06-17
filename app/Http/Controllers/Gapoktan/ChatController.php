@@ -35,7 +35,7 @@ class ChatController extends Controller
     public function index()
     {
 
-        return view('costumer.chat.index');
+        return view('gapoktan.chat.index');
     }
 
     public function createChat(Request $request)

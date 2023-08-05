@@ -217,14 +217,21 @@
                                         <div class="form-group">
                                             <label for="color">Lainnya</label>
                                             <div class="wish-button">
-                                                @if (auth()->user()->getRoleNames()[0] == 'pembeli' ||
-                                                        auth()->user()->getRoleNames()[0] == 'gapoktan')
-                                                    <a href="{{ auth()->user()->getRoleNames()[0] == 'pembeli'? route('pembeli.chat'): route('gapoktan.chat') }}"
-                                                        id="chat-button" class="btn"
-                                                        data-chat="{{ json_encode(['product' => $product, 'url' => url()->current()]) }}"><i
-                                                            class="bi bi-chat-dots"></i>
-                                                        Chat</a>
-                                                @endif
+                                                @auth
+
+                                                    @if (auth()->user()->getRoleNames()[0] == 'pembeli' ||
+                                                            auth()->user()->getRoleNames()[0] == 'gapoktan')
+                                                        <a href="{{ auth()->user()->getRoleNames()[0] == 'pembeli'? route('pembeli.chat'): route('gapoktan.chat') }}"
+                                                            id="chat-button" class="btn"
+                                                            data-chat="{{ json_encode(['product' => $product, 'url' => url()->current()]) }}"><i
+                                                                class="bi bi-chat-dots"></i>
+                                                            Chat</a>
+                                                    @endif
+                                                @endauth
+                                                <a href="{{ route('pembeli.chat')}}" id="chat-button" class="btn"
+                                                    data-chat="{{ json_encode(['product' => $product, 'url' => url()->current()]) }}"><i
+                                                        class="bi bi-chat-dots"></i>
+                                                    Chat</a>
                                             </div>
                                         </div>
                                     </div>
@@ -313,7 +320,7 @@
                                             ->where('user_id', $product->user_id)
                                             ->orderBy('products.updated_at', 'desc')
                                             ->get();
-                                        
+
                                         $penilaianProduk = App\Models\Review::with('user', 'product', 'order')
                                             ->join('users', 'reviews.user_id', '=', 'users.id')
                                             ->join('products', 'reviews.product_id', '=', 'products.id')

@@ -164,6 +164,14 @@
                     </li>
                 </ul>
             </li>
+             <li class="nav-item">
+                <a href="/admin/cms"  class="nav-link {{ Request::is('admin/cms') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-solid fa-water"></i>
+                    <p>
+                        CMS
+                    </p>
+                </a>
+            </li>
             <li class="nav-header">Laporan</li>
             <li class="nav-item">
                 <a href="#" onclick="admin_tandur('{{ url('admin/tandur') }}')" class="nav-link {{ Request::is('admin/tandur*') ? 'active' : '' }}">

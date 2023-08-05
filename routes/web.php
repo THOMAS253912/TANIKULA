@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\CmsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController as Chat;
+use App\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,7 @@ use App\Http\Controllers\ChatController as Chat;
 |
 */
 
+Route::get('/company', [CompanyController::class, 'index']);
 // Login Admin
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/admin/login', [App\Http\Controllers\Admin\LoginController::class, 'login'])->name('login-admin');
@@ -217,6 +220,11 @@ Route::group(['middleware' => ['LoginCheck', 'auth', 'role:admin']], function ()
     Route::post('admin/pengaturan-image', [App\Http\Controllers\Admin\PengaturanController::class, 'pengaturanImage'])->name('admin.pengaturan.image');
     Route::post('admin/pengaturan-update', [App\Http\Controllers\Admin\PengaturanController::class, 'pengaturanUpdate'])->name('admin.pengaturan.update');
     Route::post('admin/pengaturan-updatePassword', [App\Http\Controllers\Admin\PengaturanController::class, 'pengaturanUpdatePassword'])->name('admin.pengaturan.updatePassword');
+
+    Route::get('admin/cms', [CmsController::class, 'index']);
+    Route::post('admin/cms/update', [CmsController::class, 'update']);
+    Route::post('admin/cms/update-img', [CmsController::class, 'updateImage']);
+    Route::post('admin/cms/update-img-multiple', [CmsController::class, 'updateImageMultiple']);
 });
 
 // Login Gapoktan
@@ -227,6 +235,8 @@ Route::group(['middleware' => ['LoginCheck', 'auth', 'role:admin']], function ()
 Route::get('/gapoktan/register', [App\Http\Controllers\Gapoktan\LoginController::class, 'register'])->name('register-gapoktan');
 Route::post('/gapoktan/register', [App\Http\Controllers\Gapoktan\LoginController::class, 'registerGapoktan'])->name('registerGapoktan-gapoktan');
 // });
+
+
 
 // Gapoktan
 Route::group(['middleware' => ['LoginCheck', 'auth', 'role:gapoktan']], function () {
